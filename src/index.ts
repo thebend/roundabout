@@ -2,6 +2,7 @@ import fetch from 'node-fetch'
 import path from 'path'
 import * as fs from 'fs'
 
+const checkInterval = 2*60*1000
 const camDir = 'http://images.drivebc.ca/bchighwaycam/pub/cameras/'
 
 const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
@@ -60,7 +61,7 @@ const checkCameras = (cameras:CameraSet) => Object.values(cameras).forEach(getNe
 const main = async () => {
 	const cameras = await getLatestCameras()
 	checkCameras(cameras)
-	setInterval(()=>checkCameras(cameras), 1*60*1000)
+	setInterval(()=>checkCameras(cameras), checkInterval)
 }
 
 main()
