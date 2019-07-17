@@ -1,0 +1,17 @@
+{
+  "name": "roundabout",
+  "version": "1.0.0",
+  "description": "Terrace Roundabout Video Construction",
+  "main": "index.js",
+  "repository": "https://github.com/thebend/roundabout",
+  "author": "Benjamin Davidson <ben.davidson@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^12.6.6",
+    "@types/node-fetch": "^2.3.7",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.0"
+  }
+}
