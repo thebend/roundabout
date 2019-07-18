@@ -2,7 +2,7 @@ import fetch from 'node-fetch'
 import path from 'path'
 import * as fs from 'fs'
 
-const checkInterval = 2*60*1000
+const checkInterval = 5*60*1000
 const camDir = 'http://images.drivebc.ca/bchighwaycam/pub/cameras/'
 
 const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
@@ -16,22 +16,17 @@ const getFileBuffer = async (url:string) => {
 	return buffer
 }
 
+const ctime = (path:string) => fs.statSync(path).ctime.getTime()
+
 const getLatestFile = (dir:string) => new Promise<Buffer>((resolve, reject) => {
 	fs.readdir(dir, (err, files) => {
-		if (files.length === 0) {
-			resolve(undefined)
-			return
-		}
+		if (files.length === 0) return resolve(undefined)
 		const paths = files.map(i => path.join(dir, i))
-		const latestPath = paths.map(i => ({
-			path: i,
-			ctime: fs.statSync(i).ctime
-		})).sort((a, b) => a.ctime.getTime() - b.ctime.getTime()).pop().path
+		const latestPath = paths.sort((a, b) => ctime(a) - ctime(b)).pop()
 		const buffer = fs.readFileSync(latestPath)
 		resolve(buffer)
 	})
 })
-
 
 type CameraProfile = {
 	id:string
