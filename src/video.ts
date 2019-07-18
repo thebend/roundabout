@@ -2,12 +2,14 @@ import path from 'path'
 import * as fs from 'fs'
 import {exec} from 'child_process'
 
-const ctime = (path:string) => fs.statSync(path).ctime.getTime()
+const ctime = (path:string) => fs.statSync(path).ctime
 
 const getFmList = (paths:string[]) => paths
-		.sort((a, b) => ctime(a) - ctime(b))
-		.map(i=>`file '${i}'`)
-		.join('\n')
+	.map(i=>({path:i, ctime: ctime(i)}))
+	.filter(({ctime}) => ctime.getHours() >= 7 && ctime.getHours() <= 22)
+	.sort((a, b) => a.ctime.getTime() - b.ctime.getTime())
+	.map(({path}) => `file '${path}'`)
+	.join('\n')
 
 const makeFmList = (dir:string) => new Promise<string>((resolve, reject) => {
 	fs.readdir(dir, (err, files) => {
